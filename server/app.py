@@ -8,6 +8,9 @@ app.config.update(
     SECRET_KEY=b'\x92d\xf2\xae\x03g\xb7\xa0O\xac[D\x13\x08\x1a\x94'
 )
 
+from blueprints.site import site
+app.register_blueprint(site)
+
 @app.route('/')
 def index():
     return '<h1>Welcome to The Evan Universe!</h1><br>'
