@@ -5,3 +5,5 @@
 **/client_id.json
 **/node_modules
 **/ENV
+playground/**
+!playground/README.md
