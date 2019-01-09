@@ -1,5 +1,6 @@
 <template lang="html">
   <div class="Test">
+  <button type="button" name="button" @click="anotherHi">HI</button>
   <md-card>
       <md-card-media>
         <img src="../assets/logo.png" alt="People">
@@ -13,7 +14,7 @@
       <md-card-expand>
         <md-card-actions md-alignment="space-between">
           <div>
-            <md-button>Action</md-button>
+            <md-button @click.native="checkState">Action</md-button>
             <md-button>Action</md-button>
           </div>
 
@@ -42,24 +43,41 @@ import { MdCard, MdButton, MdIcon } from 'vue-material/dist/components'
 import 'vue-material/dist/vue-material.min.css'
 // import axios from 'axios'
 
+import { mapGetters, mapActions } from 'vuex'
+
 Vue.use(MdCard)
 Vue.use(MdButton)
 Vue.use(MdIcon)
 
 export default {
   name: 'Test',
-  methods:{
-    sayhi:function(){
-      alert('HI');
-    }
+  computed: {
+    ...mapGetters('login',[
+      'user',
+      'AuthenticatedType'
+    ])
+
   },
+  methods: {
+    ...mapActions('login',[
+    'checkState',
+    'login',
+    'logout',
+    'register',
+    'sayhi'
+  ]),
+  anotherHi(){console.log(this.AuthenticatedType)}
+  },
+  created:function(){this.checkState()},
   mounted:function(){
     this.$nextTick(()=>{
-      console.log('dad');
-      // axios
-      // .get('http://54.71.220.94/EU/site/')
-      // .then((response) => {console.log(response);})
-      // .catch((err) => {console.log(err);})
+      this.login({
+        email:"evanchen333@gmail.com",
+        password:"admin333",
+        // real_name:"陳逸帆",
+        // name:"mutsuki333"
+      })
+      // .then(c=>console.log(c))
     })
   }
 }

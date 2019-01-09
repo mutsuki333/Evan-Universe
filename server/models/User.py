@@ -62,6 +62,7 @@ class User(UserMixin):
     def add_user(self):
         self.id=format(
         db.db.users.insert_one({
+            'auth_type':self.auth_type,
             'name':self.name,
             'password_hash':self.password_hash,
             'email':self.email,

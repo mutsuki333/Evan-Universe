@@ -61,7 +61,7 @@ def login():
         return jsonify(user.user_obj())
     return 'login require'
 
-@site.route('is_logged_in')
-def is_logged_in():
-    print('current user: {}'.format(current_user))
-    return format(current_user.is_authenticated)
+@site.route('auth_type')
+def auth_type():
+    # print('current user: {}'.format(current_user))
+    return jsonify({'auth_type' :current_user.is_authenticated and current_user.auth_type or 'unauthorized'})

@@ -1,5 +1,6 @@
 from flask import Flask, Blueprint, session, jsonify
 from flask_login import LoginManager
+from flask_cors import CORS
 
 import sys
 
@@ -42,4 +43,5 @@ def index():
     return '<h1>Welcome to The Evan Universe!</h1><br>'
 
 if __name__ == '__main__':
+    CORS(app,supports_credentials=True)
     app.run(host='0.0.0.0',port=5000)

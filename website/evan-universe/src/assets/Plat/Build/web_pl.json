@@ -1,0 +1,12 @@
+{
+"companyName": "DefaultCompany",
+"productName": "Plat",
+"dataUrl": "web_pl.data.unityweb",
+"wasmCodeUrl": "web_pl.wasm.code.unityweb",
+"wasmFrameworkUrl": "web_pl.wasm.framework.unityweb",
+"TOTAL_MEMORY": 268435456,
+"graphicsAPI": ["WebGL 2.0", "WebGL 1.0"],
+"webglContextAttributes": {"preserveDrawingBuffer": false},
+"splashScreenStyle": "Dark",
+"backgroundColor": "#231F20"
+}
