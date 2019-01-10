@@ -1,3 +1,21 @@
 export default {
-  register:'註冊'
+  used:'信箱已使用。請使用別的信箱。',
+  title: '加入超級帆哥宇宙',
+  subtitle: '飛向宇宙浩瀚無垠',
+  nameLabel:'暱稱',
+  nameDescription:'向其他玩家顯示的名稱。',
+  namePlaceholder:'輸入暱稱',
+  emailLabel:'Email 信箱',
+  emailPlaceholder:'輸入信箱',
+  real_nameLabel: '真實姓名',
+  real_nameDescrption: '在此網站中的所有使用都是匿名的。',
+  real_namePlaceholder: '輸入真實姓名',
+  pwdLabel: '密碼',
+  pwdPlaceholder: '請輸入密碼',
+  pwd_checkLabel: '密碼確認',
+  pwd_checkPlaceholder: '請再次輸入密碼',
+  agree: '我同意',
+  kill: '我超殺',
+  submit: '加入',
+  have: "我有帳號了"
 }

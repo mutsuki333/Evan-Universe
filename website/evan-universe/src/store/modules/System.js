@@ -9,6 +9,7 @@ const LANG = Object.freeze({
 const state = {
   connected:false,
   notifications:[],
+  alert:[],
   lang:LANG.CH
 }
 
@@ -27,7 +28,12 @@ const actions = {
       .then(sheet=>{
         resolve(sheet.default)
       })
-      .catch((err) => console.log(err))
+      .catch(() => {
+        import(`@/sheet/en/${componentName}Sheet`)
+        .then(sheet=>{
+          resolve(sheet.default)
+        })
+      })
     })
   },
   connect:({state,commit})=>{

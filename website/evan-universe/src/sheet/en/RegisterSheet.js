@@ -1,0 +1,21 @@
+export default {
+  used:'Email is used. Plz use a different email.',
+  title: 'Join The Evan Universe.',
+  subtitle: 'To infinity and beyond.',
+  nameLabel:'Your Nick Name',
+  nameDescription:'The name that will be shown to other users.',
+  namePlaceholder:'Enter nick name',
+  emailLabel:'Email address',
+  emailPlaceholder:'Enter email',
+  real_nameLabel: 'Real Name:',
+  real_nameDescrption: 'All of your activites will be anonymous.',
+  real_namePlaceholder: 'Enter real name',
+  pwdLabel: 'Password:',
+  pwdPlaceholder: 'Enter password',
+  pwd_checkLabel: ' Repeat password again',
+  pwd_checkPlaceholder: 'Enter password again',
+  agree: 'I agree.',
+  kill: "I'm killing",
+  submit: 'Join',
+  have: "I have an account"
+}

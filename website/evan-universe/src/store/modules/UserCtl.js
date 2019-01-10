@@ -21,26 +21,30 @@ const getters = {
 // actions
 const actions = {
   login:({commit},obj)=>{
-    axios
-      .post("/site/login",obj)
-      .then(response=>{
-        if(typeof response.data==='string')
-          return response.data
-        commit('login',response.data);
-        return 'success'
-      })
-      .catch(err => console.log(err))
+    return new Promise((resolve) => {
+      axios
+        .post("/site/login",obj)
+        .then(response=>{
+          if(typeof response.data==='string')
+            resolve(response.data)
+          commit('login',response.data);
+          return 'success'
+        })
+        .catch(err => console.log(err))
+    })
   },
   logout:({commit})=>{
     axios('/site/logout')
     commit('logout')
   },
   register:({commit},obj)=>{
-    return axios
-      .post('/site/register',obj)
-      .then(res=>{
-        return res.data
-      })
+    return new Promise((resolve) => {
+      axios
+        .post('/site/register',obj)
+        .then(res=>{
+          resolve(res.data)
+        })
+    })
   },
   reload:({state,commit})=>{
     return new Promise((resolve) => {

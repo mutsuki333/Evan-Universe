@@ -1,3 +1,3 @@
 export default {
-  EvanUniverse:'帆哥宇宙'
+  title:'帆哥宇宙'
 }
