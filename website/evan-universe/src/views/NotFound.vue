@@ -1,21 +1,18 @@
 <template lang="html">
   <div class="notfound">
-    <h1>Page not found, <br>will redirect to home page in {{time}}</h1><br>
-    <md-button>back to home</md-button>
+    <h1>Page not found, <br>will redirect to home page in</h1>
+    <h1 id="big">{{time}}</h1>
+    <br>
+    <button @click="$router.push('/home')">back to home</button>
   </div>
 </template>
 
 <script>
-import Vue from 'vue'
-import { MdButton } from 'vue-material/dist/components'
-import 'vue-material/dist/vue-material.min.css'
-
-Vue.use(MdButton)
 
 export default {
   name: 'notfound',
   data(){
-    return {time:1}
+    return {time:5}
   },
   methods:{
     goto(){
@@ -36,15 +33,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
-.card-expansion {
-    height: 480px;
-  }
-
-  .md-card {
-    width: 320px;
-    margin: 4px;
-    display: inline-block;
-    vertical-align: top;
-  }
+#big {
+  font-size: 60px
+}
 </style>

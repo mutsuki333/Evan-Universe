@@ -4,7 +4,7 @@ from flask_cors import CORS
 
 import sys
 
-LOGINVIEW='http://54.71.220.94/static/'
+LOGINVIEW='http://localhost:8080/auth/login'
 
 app = Flask(__name__)
 app.config.update(
@@ -20,6 +20,8 @@ resource_imgdb.init_app(app,uri='mongodb://localhost:27017/img')
 resource_rdb.init_app(app,uri='mongodb://localhost:27017/evan_universe')
 from blueprints.game import db as game_db
 game_db.init_app(app, uri='mongodb://localhost:27017/evan_universe')
+from blueprints.announce import db as announce_db
+announce_db.init_app(app, uri='mongodb://localhost:27017/evan_universe')
 
 # set user_loader
 from models.User import User
@@ -37,6 +39,8 @@ from blueprints.resource import resource
 app.register_blueprint(resource)
 from blueprints.game import game
 app.register_blueprint(game)
+from blueprints.announce import announce
+app.register_blueprint(announce)
 
 @app.route('/')
 def index():

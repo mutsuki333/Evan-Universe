@@ -28,9 +28,29 @@ export default new Router({
       component: ()=>import('./views/Plat.vue')
     },
     {
+      path: '/auth/',
+      component: () => import('./views/Auth.vue'),
+      children:[
+        { path:'login',component: ()=> import('./components/Auth/Login.vue') },
+        { path:'register',component:()=>import('./components/Auth/Register.vue')}
+      ]
+    },
+    {
+      path: '/user/',
+      component: () => import('./views/UserPage.vue'),
+      children:[
+        { path: 'home', component: ()=>import('./components/User/UserHome')}
+      ]
+    },
+    {
+      path: '/showcase',
+      name: 'showcase',
+      component: () => import('./views/Showcase.vue')
+    },
+    {
       path: '/test',
       name: 'test',
-      component: () => import(/* webpackChunkName: "about" */ './views/Test.vue')
+      component: () => import('./views/Test.vue')
     },
     {
       path: '/*',

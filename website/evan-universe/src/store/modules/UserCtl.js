@@ -20,20 +20,14 @@ const getters = {
 
 // actions
 const actions = {
-  checkState:({commit})=>{
-    axios
-      .get('/site/auth_type')
-      .then(res=>{
-        commit('checkState',res)
-      })
-      .catch((err) => console.log(err))
-  },
   login:({commit},obj)=>{
     axios
       .post("/site/login",obj)
       .then(response=>{
-        console.log(response);
-        commit('login',response.data)
+        if(typeof response.data==='string')
+          return response.data
+        commit('login',response.data);
+        return 'success'
       })
       .catch(err => console.log(err))
   },
@@ -41,30 +35,52 @@ const actions = {
     axios('/site/logout')
     commit('logout')
   },
-  register:({},obj)=>{
+  register:({commit},obj)=>{
     return axios
       .post('/site/register',obj)
       .then(res=>{
         return res.data
       })
   },
+  reload:({state,commit})=>{
+    return new Promise((resolve) => {
+      if(state.user.auth_type!=undefined){
+        resolve(state.user.auth_type)
+        return
+      }
+      axios('/site/auth_type')
+      .then(res=>{
+        if(res.data.auth_type!='unauthorized'){
+          console.log('reload');
+          axios('/site/reload')
+          .then(user=>{
+            commit('set_user',user.data);
+          })
+        }
+        else {
+          commit('logout');
+        }
+        resolve(state.AuthenticatedType)
+      })
+      .catch(err=>console.log(err))
+    })
+  },
   sayhi:()=>alert('hi')
 }
 
 // mutations
 const mutations = {
-  checkState(state,res){
-    console.log(res.data.auth_type);
-    state.AuthenticatedType = res.data.auth_type;
-  },
   login(state,user){
-    // console.log(user);
     state.AuthenticatedType=user.auth_type;
     state.user=user;
   },
   logout(state){
-    state.AuthenticatedType=false;
+    state.AuthenticatedType='unauthorized';
     state.user={};
+  },
+  set_user(state,user){
+    state.AuthenticatedType=user.auth_type;
+    state.user=user;
   }
 }
 

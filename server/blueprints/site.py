@@ -25,6 +25,11 @@ def update():
     return jsonify(current_user.user_obj())
     return 'success'
 
+@site.route('/reload')
+@login_required
+def reload():
+    return jsonify(current_user.user_obj())
+
 @site.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':

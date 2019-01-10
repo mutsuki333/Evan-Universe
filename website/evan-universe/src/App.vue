@@ -1,28 +1,31 @@
 <template>
   <div id="app">
     <Navbar/>
-    <router-view/>
+    <b-container fluid>
+      <Notifications/>
+      <div class="content">
+        <router-view/>
+      </div>
+      <Footer/>
+    </b-container>
   </div>
 </template>
 
 <script>
-import Navbar from  './components/Navbar.vue'
+import Navbar from  './components/Home/Navbar.vue'
+import Notifications from './components/Home/Notifications.vue'
+import Footer from './components/Home/Footer.vue'
+
 export default {
   name:'app',
   components:{
-    Navbar
+    Navbar,
+    Notifications,
+    Footer
   }
 }
-
 </script>
 
 <style lang="scss">
 @import 'styles';
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
 </style>

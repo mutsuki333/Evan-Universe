@@ -1,0 +1,49 @@
+$default: #009688;
+$primary: #4FC3F7;
+$secondary: #03A9F4;
+$success: #4CAF50;
+$warning: #FFEE58;
+$danger: #D32F2F;
+$info: #4DD0E1;
+$light: #E1F5FE;
+$dark: #01579B;
+
+.e-primary{color:$primary}
+.e-secondary{coloy:$secondary}
+.e-success{color:$success}
+.e-warning{color:$warning}
+.e-danger{color:$danger}
+.e-info{color:$info}
+.e-light{color:$light}
+.e-dark{color:$dark}
+.eb-primary{background-color:$primary}
+.eb-secondary{background-color:$secondary}
+.eb-success{background-color:$success}
+.eb-warning{background-color:$warning}
+.eb-danger{background-color:$danger}
+.eb-info{background-color:$info}
+.eb-light{background-color:$light}
+.eb-dark{background-color:$dark}
+
+body,html{
+  color: $default;
+}
+
+#app {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  // text-align: center;
+  // a {
+  //   font-weight: bold;
+  //   color: $default;
+  //   &.router-link-exact-active {
+  //     color: $primary;
+  //   }
+  // }
+}
+
+.content{
+  text-align: center;
+  color: $default;
+}
