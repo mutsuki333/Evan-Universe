@@ -7,7 +7,7 @@
       id="card"
       border-variant="primary">
     <b-form>
-      <b-collapse id="coll" class="text-danger" v-model="formV.showCollapse">{{sheet.used}}</b-collapse>
+      <b-collapse id="coll" class="text-danger" v-model="formV.showCollapse">{{formV.alt}}</b-collapse>
       <b-form-group id="name"
                     :label="sheet.nameLabel"
                     label-for="name"
@@ -80,9 +80,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-
-let pwd_re = new RegExp(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{5,}$/);
-let email_re = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+import { pwd_re, email_re } from '@/rules'
 
 
 export default {
@@ -98,7 +96,7 @@ export default {
         checked: []
     },
     formV: {  //form validate
-      name:null,email:null,real:null,pwd:null,pwd2:null,showCollapse:false
+      name:null,email:null,real:null,pwd:null,pwd2:null,showCollapse:false,alt:''
     }
   }),
   computed:{
@@ -126,14 +124,22 @@ export default {
       if(this.form.password==''||!pwd_re.test(this.form.password)){this.formV.pwd=false;valid=false}else this.formV.pwd=true;
       if(this.form.password!=this.form.pwd_check||!pwd_re.test(this.form.pwd_check)){this.formV.pwd2=false;valid=false}else this.formV.pwd2=true;
       if(valid)this.register(this.form).then(res=>{
-        console.log(res);
-        if(res=='Please use a different email.')this.formV.showCollapse=true;
+        if(res=='email used'){
+          this.formV.alt=this.sheet.emailUsed;
+          this.formV.showCollapse=true;
+          this.formV.email=false;
+        }
+        else if(res=='name used'){
+          this.formV.alt=this.sheet.nameUsed;
+          this.formV.showCollapse=true;
+          this.formV.name=false;
+        }
         else this.$router.push('/auth/login')
       })
     }
   },
   created: function(){
-    this.loadsheet('Register')
+    this.loadsheet(this.$options.name)
     .then(sheet => this.sheet=sheet)
     this.reload()
     .then((res) => {

@@ -9,5 +9,14 @@ announce = Blueprint('announce', __name__, url_prefix='/announce')
 
 @announce.route('/')
 def home():
+    t = {
+    'ddd':"dafd","ijaid":"addsd"
+    }
+    k = {
+    'kkk':"sss","addd":"addssdad"
+    }
+    v =[t,k]
     # print(current_user.user_obj())
-    return jsonify({"announce":"The Big Bang is starting!!"})
+    o = {"announce":"The Big Bang is starting!!"}
+    print(v+[o])
+    return jsonify(o)

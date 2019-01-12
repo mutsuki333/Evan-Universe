@@ -1,5 +1,6 @@
-// import Conf from './Conf'
 import axios from 'axios'
+import Cookies from 'js-cookie'
+
 
 // initial state
 // shape: [{ id, quantity }]
@@ -23,24 +24,26 @@ const actions = {
   login:({commit},obj)=>{
     return new Promise((resolve) => {
       axios
-        .post("/site/login",obj)
+        .post("/auth/login",obj)
         .then(response=>{
-          if(typeof response.data==='string')
+          if(typeof response.data==='string'){
             resolve(response.data)
+            return
+          }
           commit('login',response.data);
-          return 'success'
+          resolve('success');
         })
         .catch(err => console.log(err))
     })
   },
   logout:({commit})=>{
-    axios('/site/logout')
+    axios('/auth/logout')
     commit('logout')
   },
   register:({commit},obj)=>{
     return new Promise((resolve) => {
       axios
-        .post('/site/register',obj)
+        .post('/auth/register',obj)
         .then(res=>{
           resolve(res.data)
         })
@@ -52,11 +55,11 @@ const actions = {
         resolve(state.user.auth_type)
         return
       }
-      axios('/site/auth_type')
+      axios('/auth/auth_type')
       .then(res=>{
         if(res.data.auth_type!='unauthorized'){
           console.log('reload');
-          axios('/site/reload')
+          axios('/auth/reload')
           .then(user=>{
             commit('set_user',user.data);
           })

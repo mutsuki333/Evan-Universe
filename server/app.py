@@ -22,6 +22,8 @@ from blueprints.game import db as game_db
 game_db.init_app(app, uri='mongodb://localhost:27017/evan_universe')
 from blueprints.announce import db as announce_db
 announce_db.init_app(app, uri='mongodb://localhost:27017/evan_universe')
+from models.Blogs import db as blogs_db
+blogs_db.init_app(app, uri='mongodb://localhost:27017/evan_universe')
 
 # set user_loader
 from models.User import User
@@ -33,14 +35,16 @@ def load_user(id):
     return user
 
 # register blueprints
-from blueprints.site import site
-app.register_blueprint(site)
+from blueprints.auth import auth
+app.register_blueprint(auth)
 from blueprints.resource import resource
 app.register_blueprint(resource)
 from blueprints.game import game
 app.register_blueprint(game)
 from blueprints.announce import announce
 app.register_blueprint(announce)
+from blueprints.blog import blog
+app.register_blueprint(blog)
 
 @app.route('/')
 def index():

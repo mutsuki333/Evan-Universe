@@ -1,3 +1,12 @@
+# User data structure:
+#     in users:
+#     { name real_name password_hash email ...  //user infos
+#       join_date last_login 
+#      notifications:[{ type:' ', msg:'', link:'' }, ...]
+#      games[{name:'xxx',id:'xxx',link:'' }, ...]
+#      blogs[{ id:'xxx' }], ... }
+
+
 import re, time
 from flask_login import UserMixin
 from flask_pymongo import PyMongo
@@ -21,8 +30,14 @@ class User(UserMixin):
             self.__dict__.update(Dict)
 
     @staticmethod
-    def exsit(email):
+    def exsitEmail(email):
         if db.db.users.find_one({'email':email}) is None:
+            return False
+        return True
+
+    @staticmethod
+    def exsitName(name):
+        if db.db.users.find_one({'name':name}) is None:
             return False
         return True
 
@@ -41,6 +56,9 @@ class User(UserMixin):
         doc = db.db.users.find_one({'email':email})
         if doc is None:return None
         return User.load(format(doc['_id']))
+
+    def login(self):
+        db.db.users.update_one({'_id':self._id},{'$set':{'last_login':time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())}})
 
     def reload(self):
         doc = db.db.users.find_one({'_id':ObjectId(self.id)})
@@ -68,6 +86,8 @@ class User(UserMixin):
             'email':self.email,
             'real_name':self.real_name,
             'games':[],
+            'noteification':[],
+            'blogs':[],
             'join_date':time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         }).inserted_id)
         return 'success'

@@ -23,8 +23,8 @@
           </b-nav-form>
 
           <b-nav-item-dropdown text="Lang" right>
-            <b-dropdown-item href="#">EN</b-dropdown-item>
-            <b-dropdown-item href="#">ES</b-dropdown-item>
+            <b-dropdown-item @click="changeLang('EN')">EN</b-dropdown-item>
+            <b-dropdown-item @click="changeLang('CH')">CH</b-dropdown-item>
             <b-dropdown-item href="#">RU</b-dropdown-item>
             <b-dropdown-item href="#">FA</b-dropdown-item>
           </b-nav-item-dropdown>
@@ -81,12 +81,19 @@ export default {
     ]),
     ...mapActions('System',[
       'connect',
-      'loadsheet'
+      'loadsheet',
+      'setLang'
     ]),
-    test(){window.location.reload()}
+    changeLang(lang){
+      this.setLang(lang)
+      .then(()=>{this.$router.go(0)})
+    },
+    test(){
+      window.location.reload();
+    }
   },
   created: function(){
-    this.loadsheet('Navbar')
+    this.loadsheet(this.$options.name)
     .then(sheet=>this.sheet=sheet)
     this.reload();
     this.connect();

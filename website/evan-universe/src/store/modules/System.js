@@ -1,16 +1,24 @@
 import axios from 'axios'
+import Cookies from 'js-cookie'
 
 const LANG = Object.freeze({
-    CH: "ch",
-    JP: "jp",
-    EN: "en"
+    CH: "CH",
+    JP: "JP",
+    EN: "EN"
 });
+function isLang(lang){
+  for (let i in LANG) {
+    if(lang==i)return true;
+  }
+  return false;
+}
+
 
 const state = {
   connected:false,
   notifications:[],
   alert:[],
-  lang:LANG.CH
+  lang:Cookies.get('LANG')||LANG.EN
 }
 
 
@@ -29,12 +37,21 @@ const actions = {
         resolve(sheet.default)
       })
       .catch(() => {
-        import(`@/sheet/en/${componentName}Sheet`)
+        import(`@/sheet/EN/${componentName}Sheet`)
         .then(sheet=>{
           resolve(sheet.default)
         })
       })
     })
+  },
+  setLang:({state,commit},lang)=>{
+    return new Promise(function(resolve, reject) {
+      if(isLang(lang)){
+        commit('setLang',lang);
+        resolve(`set lang to ${lang}`)
+      }
+      else reject(`unknown LANG ${lang}`)
+    });
   },
   connect:({state,commit})=>{
     axios
@@ -49,9 +66,13 @@ const actions = {
 
 // mutations
 const mutations = {
+  setLang(state,lang){
+    Cookies.set('LANG', lang);
+  },
   connect(state,res){
     state.connected=true;
     console.log(res.data);
+    console.log(`cookie: ${Cookies.get('LANG')}, state: ${state.lang}`);
   }
 }
 

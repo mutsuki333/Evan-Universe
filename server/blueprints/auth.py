@@ -3,20 +3,20 @@ from flask_login import LoginManager, UserMixin, current_user, login_user, logou
 
 from models.User import User
 
-site = Blueprint('site', __name__, url_prefix='/site')
+auth = Blueprint('auth', __name__, url_prefix='/auth')
 
 
-@site.route('/')
+@auth.route('/')
 def home():
     return 'Not in my house!'
 
 
-@site.route('/logout')
+@auth.route('/logout')
 def logout():
     logout_user()
     return 'logged out!'
 
-@site.route('/update', methods=['GET', 'POST'])
+@auth.route('/update', methods=['GET', 'POST'])
 @login_required
 def update():
     data = request.form or request.get_json()
@@ -25,20 +25,22 @@ def update():
     return jsonify(current_user.user_obj())
     return 'success'
 
-@site.route('/reload')
+@auth.route('/reload')
 @login_required
 def reload():
     return jsonify(current_user.user_obj())
 
-@site.route('/register', methods=['GET', 'POST'])
+@auth.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         if current_user.is_authenticated:
             # return jsonify(current_user.get_user_obj())
             return 'is logged in'
         data = request.form or request.get_json()
-        if User.exsit(data.get('email')):
-            return 'Please use a different email.'
+        if User.exsitEmail(data.get('email')):
+            return 'email used'
+        if User.exsitName(data.get('name')):
+            return 'name used'
         auth_type = request.args.get('auth_type') or 'basic'
         user = User(
             name=data['name'],
@@ -52,7 +54,7 @@ def register():
         return 'success'
     return 'login require'
 
-@site.route('/login', methods=['GET', 'POST'])
+@auth.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         if current_user.is_authenticated:
@@ -61,12 +63,13 @@ def login():
         user = User.filter(data.get('email'))
         if user is None or not user.check_password(data.get('password')):
             return 'Invalid username or password'
+        user.login()
         login_user(user, remember=True)
         # return 'success'
         return jsonify(user.user_obj())
     return 'login require'
 
-@site.route('auth_type')
+@auth.route('auth_type')
 def auth_type():
     # print('current user: {}'.format(current_user))
     return jsonify({'auth_type' :current_user.is_authenticated and current_user.auth_type or 'unauthorized'})

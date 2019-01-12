@@ -34,7 +34,7 @@ export default {
     'register',
     'sayhi'
   ]),
-  anotherHi(){console.log(this.AuthenticatedType)}
+  anotherHi(){console.log(this.user)}
   },
   mounted:function(){
     this.$nextTick(()=>{
