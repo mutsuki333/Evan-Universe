@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
 
+// import Etextarea from './components/Etextarea.vue'
+
 Vue.use(Router)
 
 export default new Router({
@@ -48,8 +50,36 @@ export default new Router({
       component: () => import('./views/Showcase.vue')
     },
     {
+      path:'/mdtutorial',
+      name:'MDTutorial',
+      component: ()=> import('./views/MDTutorial.vue')
+    },
+    {
+      path: '/blogs',
+      name: 'blogs',
+      component: () => import('./components/Blog/Blogs.vue')
+    },
+    {
+      path: '/blog/:id',
+      name: 'blog',
+      props: true,
+      component: () => import('./components/Blog/Blog.vue')
+    },
+    {
+      path: '/ann',
+      name: 'ann',
+      component: () => import('./components/Auth/SetAnnounce.vue')
+    },
+    {
+      path: '/post',
+      name: 'post',
+      component: () => import('./components/Blog/Post.vue')
+    },
+    {
       path: '/test',
       name: 'test',
+      // component: Etextarea
+      // component: () => import('./components/CodeEditor.vue')
       component: () => import('./views/Test.vue')
     },
     {

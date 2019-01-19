@@ -12,9 +12,9 @@
 </template>
 
 <script>
-import Navbar from  './components/Home/Navbar.vue'
-import Notifications from './components/Home/Notifications.vue'
-import Footer from './components/Home/Footer.vue'
+import Navbar from  './components/Main/Navbar.vue'
+import Notifications from './components/Main/Notifications.vue'
+import Footer from './components/Main/Footer.vue'
 
 export default {
   name:'app',

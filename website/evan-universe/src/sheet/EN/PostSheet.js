@@ -1,0 +1,23 @@
+export default{
+  leave:'Do you really want to leave? you have unsaved changes!',
+  leaveY:'Yes',
+  leaveN:'Cancel',
+  title:'Title',
+  titleP:'Enter title',
+  subtitle:'Subtitle',
+  subtitleP:'Enter subtitle or description',
+  tags:'tags',
+  tagP:'input tags here',
+  tagP_err:'tag already exists',
+  content:'Content',
+  contentDefault:'<!-- input here -->',
+  mdtutorial:'Markdown useage',
+  draft:'Save as draft',
+  draftmsg:'',
+  cookie:'Save to local',
+  cookiemsg:'Saved to local',
+  post:'Post',
+  postmsg:'Post successfully',
+  cancel:'Cancel',
+  nocontent:'Blogs must contain more than 50 characters'
+}

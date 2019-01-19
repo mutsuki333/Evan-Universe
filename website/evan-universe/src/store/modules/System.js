@@ -1,5 +1,8 @@
 import axios from 'axios'
 import Cookies from 'js-cookie'
+import Prism from 'prismjs'
+
+// import Prism from '@/assets/prism.js'
 
 const LANG = Object.freeze({
     CH: "CH",
@@ -16,16 +19,21 @@ function isLang(lang){
 
 const state = {
   connected:false,
-  notifications:[],
-  alert:[],
-  lang:Cookies.get('LANG')||LANG.EN
+  noteMsg:'',
+  showAd:true,
+  showNote:false,
+  lang:Cookies.get('LANG')||LANG.EN ,
+  routeBack:''
 }
 
 
 // getters
 const getters = {
   notifications:(state)=>{return state.notifications},
-  lang:(state)=>{return state.lang}
+  lang:(state)=>{return state.lang},
+  routeBack:(state)=>{return state.routeBack},
+  showNote:(state)=>{return state.showNote},
+  noteMsg:(state)=>{return state.noteMsg}
 }
 
 // actions
@@ -53,6 +61,10 @@ const actions = {
       else reject(`unknown LANG ${lang}`)
     });
   },
+  setRouteBack:({commit},from)=>{
+    if(typeof from === 'string' && from!="")
+      commit('setRouteBack',from)
+  },
   connect:({state,commit})=>{
     axios
       .get('/announce/')
@@ -61,7 +73,37 @@ const actions = {
       })
       .catch((err) => console.log(err))
   },
-  sayhi:()=>alert('hi')
+  highlight:()=>Prism.highlightAll(false),
+  uploadIMG:({state},img,base=null)=>{
+    return new Promise(function(resolve) {
+      let url='/resource/upload_img'
+      if(base!=null)url+=`/${base}`
+      axios.post(url,img)
+      .then(res=>{
+        resolve(`${axios.defaults.baseURL}${res.data}`)
+      })
+    });
+  },
+  addNote:({state,commit},notes)=>{ //notes:{}
+    commit('setNote',true);
+    commit('addNote',notes);
+  },
+  setAd:({state,commit},bool)=>{
+    commit('setAd',bool)
+  },
+  setNote:({commit},bool)=>{
+    commit('setNote',bool)
+  },
+  scrollToTop:()=>{
+    let scrollToTop = window.setInterval(() => {
+      let pos = window.pageYOffset;
+      if (pos > 0) {
+          window.scrollTo(0, pos - 20); // how far to scroll on each step
+      } else {
+          window.clearInterval(scrollToTop);
+      }
+    }, 16);
+  }
 }
 
 // mutations
@@ -72,7 +114,19 @@ const mutations = {
   connect(state,res){
     state.connected=true;
     console.log(res.data);
-    console.log(`cookie: ${Cookies.get('LANG')}, state: ${state.lang}`);
+    // console.log(`cookie: ${Cookies.get('LANG')}, state: ${state.lang}`);
+  },
+  setRouteBack(state,from){
+    state.routeBack=from;
+  },
+  setAd(state,bool){
+    state.showAd=bool;
+  },
+  setNote(state,bool){
+    state.showNote=bool;
+  },
+  addNote(state,notes){
+    state.noteMsg=notes;
   }
 }
 

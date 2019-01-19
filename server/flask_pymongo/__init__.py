@@ -260,5 +260,6 @@ class PyMongo(object):
         try:
             storage.delete(file_id=id)
         except NoFile:
+            return 'no file'
             abort(404)
         return 'success'

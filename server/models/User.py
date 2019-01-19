@@ -1,13 +1,15 @@
 # User data structure:
 #     in users:
-#     { name real_name password_hash email ...  //user infos
-#       join_date last_login 
-#      notifications:[{ type:' ', msg:'', link:'' }, ...]
+#     { name real_name password_hash email auth_type ...  //user infos
+#       join_date last_login pic
+#      notification:[{ type:' ', msg:'', link:'',read:false }, ...]
 #      games[{name:'xxx',id:'xxx',link:'' }, ...]
-#      blogs[{ id:'xxx' }], ... }
+#      blogs[ id:'xxx' ],
+#      last_blog_view:time,
+#     }
 
 
-import re, time
+import re, time, datetime
 from flask_login import UserMixin
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
@@ -58,12 +60,13 @@ class User(UserMixin):
         return User.load(format(doc['_id']))
 
     def login(self):
-        db.db.users.update_one({'_id':self._id},{'$set':{'last_login':time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())}})
+        db.db.users.update_one({'_id':self._id},{'$set':{'last_login':datetime.datetime.utcnow()}})
 
     def reload(self):
         doc = db.db.users.find_one({'_id':ObjectId(self.id)})
         self.__dict__.update(doc)
         self.id=format(doc['_id'])
+        self.login()
 
     def user_obj(self):
         obj = self.__dict__
@@ -85,10 +88,11 @@ class User(UserMixin):
             'password_hash':self.password_hash,
             'email':self.email,
             'real_name':self.real_name,
+            'pic':'http://54.71.220.94/EU/resource/img/?base=img&id_str=5c4306f771ca3d4632f81127',
             'games':[],
-            'noteification':[],
+            'notification':[],
             'blogs':[],
-            'join_date':time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+            'join_date':datetime.datetime.utcnow()
         }).inserted_id)
         return 'success'
 
@@ -99,6 +103,12 @@ class User(UserMixin):
             db.db.users.update_one({'_id':self._id},{'$set':dict})
             return 'success'
         else: return 'failed'
+
+    def viewBlog(self):
+        db.db.users.update_one({'_id':self._id},{'$set':{'last_blog_view':datetime.datetime.utcnow()}})
+
+    def newPost(self,Bid):
+        db.db.users.update_one({'_id':self._id},{'$push':{'blogs':Bid}})
 
     def __repr__(self):
         return 'User class with name {}, id {}'.format(self.name,self.id)

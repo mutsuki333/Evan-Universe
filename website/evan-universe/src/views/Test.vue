@@ -1,5 +1,9 @@
 <template lang="html">
   <div class="Test">
+    <pre><code class="language-javascript">
+      var i = 1;
+      i++;
+    </code></pre>
   <button type="button" name="button" @click="anotherHi">HI</button>
 
   <b-jumbotron header="Bootstrap Vue"

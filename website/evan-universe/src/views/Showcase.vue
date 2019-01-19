@@ -1,7 +1,7 @@
 <template lang="html">
-  <div class="Showcase">
+  <div class="Showcase h-100 w-100 ">
     <h1>showcase</h1>
-    <Blog></Blog>
+    <!-- <Blog></Blog> -->
   </div>
 </template>
 

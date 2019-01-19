@@ -22,13 +22,18 @@ export default {
       'sayhi',
       'logout',
       'reload'
+    ]),
+    ...mapActions('System',[
+      'setRouteBack'
     ])
   },
   beforeMount: function(){
     this.reload()
     .then((res) => {
-      if(res==='unauthorized')
+      if(res==='unauthorized'){
+        this.setRouteBack(this.$route.path);
         this.$router.push('/auth/login')
+      }
     })
   }
 

@@ -1,17 +1,20 @@
 <template lang="html">
-  <div class="Navbar p-0">
-    <b-navbar class="eb-info pb-1" toggleable="md" type="dark" fixed="top">
+  <div class="Navbar p-0 pb-5">
+    <b-navbar class="eb-info pb-0" toggleable="lg" type="dark" fixed="top">
 
       <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
 
-      <b-navbar-brand href="/">{{sheet.title}}</b-navbar-brand>
+      <b-navbar-brand to="/">{{sheet.title}}</b-navbar-brand>
 
       <b-collapse is-nav id="nav_collapse">
 
         <b-navbar-nav>
-          <b-nav-item href="#">Link</b-nav-item>
-          <b-nav-item href="#" disabled>Disabled</b-nav-item>
-          <b-nav-item @click="test">test</b-nav-item>
+          <b-nav-item to="/blogs">Blogs</b-nav-item>
+          <b-nav-item to="/mdtutorial">Markdown Tutorial</b-nav-item>
+          <b-nav-item to="#" disabled>Games</b-nav-item>
+          <b-nav-item to="/post">post(test)</b-nav-item>
+          <b-nav-item to="/test">test</b-nav-item>
+          <!-- <b-nav-item @click="test">test</b-nav-item> -->
         </b-navbar-nav>
 
         <!-- Right aligned nav items -->
@@ -34,8 +37,8 @@
             <template slot="button-content">
               <em>User</em>
             </template>
-            <b-dropdown-item href="#">Profile</b-dropdown-item>
-            <b-dropdown-item href="#">Signout</b-dropdown-item>
+            <b-dropdown-item to="#">Profile</b-dropdown-item>
+            <b-dropdown-item to="#">Signout</b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
 
@@ -50,6 +53,8 @@
       <router-link to="/auth/register">Auth</router-link>|
       <router-link to="/user/home">Userpage</router-link>|
       <router-link to="/test">Test</router-link>|
+      <router-link to="/ann">ann</router-link>|
+      <router-link to="/post">post</router-link>|
       <router-link to="/notfound">404</router-link>
     </div>
 

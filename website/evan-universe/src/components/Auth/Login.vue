@@ -83,7 +83,7 @@ export default {
       'AuthenticatedType'
     ]),
     ...mapGetters('System',[
-      'lang'
+      'routeBack'
     ])
   },
   methods:{
@@ -110,8 +110,8 @@ export default {
         else {
           if(this.form.checked)RememberLogin(true,this.form.email,this.form.password)
           else RememberLogin(false)
-          // this.$router.push('/user/home')
-          this.$router.go(-1)
+          this.$router.push(this.routeBack)
+          // this.$router.go(-1)
         }
       })
     }
@@ -122,7 +122,7 @@ export default {
     this.reload()
     .then((res) => {
       if(res!='unauthorized')
-        this.$router.push('/user/home')
+        this.$router.push(this.routeBack)
     })
     let data = RememberLogin()
     if(data != undefined){
