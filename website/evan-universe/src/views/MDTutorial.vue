@@ -15,6 +15,7 @@
               :toc='true'
               toc-id="toc"
               @rendered='highlight()'
+              :prerender="Mention()"
             />
           </b-container>
         </b-col>
@@ -25,6 +26,7 @@
 <script>
 import VueMarkdown from 'vue-markdown'
 import { mapActions } from 'vuex'
+import { mention_re } from '@/rules'
 
 import Etextarea from '@/components/Etextarea.vue'
 
@@ -43,8 +45,23 @@ export default {
     ...mapActions('System',[
       'loadsheet',
       'highlight',
-      'setRouteBack'
+      'setRouteBack',
+      'filterMention'
     ]),
+    Mention(){
+      return (str)=>{
+        str = str.toString();
+        let mention = str.match(mention_re)
+        while (mention) {
+          let username = mention[0].trim();
+          let index = mention['index']
+          str = str.splice(index+1,0,'[')
+          str = str.splice(index+username.length+2,0,`](/user/home/${username.slice(1)})`)
+          mention = str.match(mention_re)
+        }
+        return str
+      }
+    },
     test(evt){
       console.log(evt);
       // this.highlight()
@@ -53,10 +70,10 @@ export default {
   },
   beforeMount: function(){
     this.loadsheet(this.$options.name)
-    .then(sheet => {
-      this.sheet=sheet;
-      this.highlight();
-    })
+    .then(sheet => this.sheet=sheet)
+  },
+  updated:function(){
+    this.highlight();
   }
 }
 </script>

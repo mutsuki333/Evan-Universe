@@ -4,7 +4,7 @@ export default {
   title: 'Join The Evan Universe.',
   subtitle: 'To infinity and beyond.',
   nameLabel:'Your Nick Name',
-  nameDescription:'The name that will be shown to other users.',
+  nameDescription:'The name that will be shown to other users. Can not be changed.',
   namePlaceholder:'Enter nick name',
   emailLabel:'Email address',
   emailPlaceholder:'Enter email',

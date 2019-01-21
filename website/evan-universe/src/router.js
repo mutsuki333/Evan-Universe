@@ -41,7 +41,8 @@ export default new Router({
       path: '/user/',
       component: () => import('./views/UserPage.vue'),
       children:[
-        { path: 'home', component: ()=>import('./components/User/UserHome')}
+        { path: 'home/', component: ()=>import('./components/User/UserProfile')},
+        { path: 'home/:username', props: true, component: ()=>import('./components/User/UserHome')}
       ]
     },
     {
@@ -60,7 +61,7 @@ export default new Router({
       component: () => import('./components/Blog/Blogs.vue')
     },
     {
-      path: '/blog/:id',
+      path: '/blog/:Bid',
       name: 'blog',
       props: true,
       component: () => import('./components/Blog/Blog.vue')

@@ -28,6 +28,19 @@ def post():
     data = request.get_json()
     return Blogs.post(data,current_user)
 
+@blog.route('/add/<type>', methods=['POST'])
+@login_required
+def Add(type):
+    data = request.get_json()
+    print(data)
+    Bid = request.args.get('Bid')
+    IdDate = request.args.get('IdDate')
+    if type == 'comment':
+        return jsonify(Blogs.AddComment(Bid,data,current_user))
+    if type == 'reply':
+        return jsonify(Blogs.AddReply(Bid,data,IdDate,current_user.id,current_user.name))
+    return abort(404)
+
 @blog.route('/trash/<Bid>')
 @blog.route('/trash')
 @login_required
@@ -57,14 +70,16 @@ def delete_admin(Bid=None):
 def view():
     if current_user.is_authenticated:
         current_user.viewBlog()
-    # request.args.get('base')...
-    return jsonify({'d':'d'})
+    return jsonify(Blogs.View(
+        timeStmp=request.args.get('timepstmp'),
+        tag=request.args.get('tag')
+    ))
 
 @blog.route('/id/<Bid>')
 def id(Bid):
     blog = Blogs.Blog(Bid)
     if current_user.is_authenticated:
-        blog['owns']=Blogs.owns(current_user.id,Bid)
+        blog = Blogs.Blog(Bid,current_user.id)
     else:
-        blog['owns']=False
+        blog = Blogs.Blog(Bid)
     return jsonify(blog)

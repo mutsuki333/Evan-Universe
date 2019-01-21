@@ -1,7 +1,6 @@
 import axios from 'axios'
 import Cookies from 'js-cookie'
 import Prism from 'prismjs'
-
 // import Prism from '@/assets/prism.js'
 
 const LANG = Object.freeze({

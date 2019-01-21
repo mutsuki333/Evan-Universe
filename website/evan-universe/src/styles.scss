@@ -35,7 +35,7 @@ body,html{
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-size: 20px;
+  // font-size: 20px;
   // text-align: center;
   // a {
   //   font-weight: bold;
@@ -52,11 +52,12 @@ body,html{
 }
 .markdown-preview{
   text-align: left;
-  background-color: white;
-}
-.blogmd{
-  text-align: left;
-  font: 12px;
+  img{
+    max-width: 100%;
+    height: auto;
+  }
+
+  // background-color: white;
 }
 
 @-webkit-keyframes shake {
@@ -92,4 +93,8 @@ body,html{
     -webkit-animation-duration: 0.5s;
     -webkit-transform-origin:50% 50%;
     -webkit-animation-iteration-count: infinite;
+}
+
+.bg-gray{
+  background-color: LightGray;
 }

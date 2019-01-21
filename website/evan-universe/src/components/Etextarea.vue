@@ -125,4 +125,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.text-area{
+  font-size: inherit;
+}
 </style>

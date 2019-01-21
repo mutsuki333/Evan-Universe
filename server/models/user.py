@@ -2,9 +2,10 @@
 #     in users:
 #     { name real_name password_hash email auth_type ...  //user infos
 #       join_date last_login pic
-#      notification:[{ type:' ', msg:'', link:'',read:false }, ...]
+#      notification:[#see announce, ...]
 #      games[{name:'xxx',id:'xxx',link:'' }, ...]
 #      blogs[ id:'xxx' ],
+#      viewedBlog:[{Bid,time}...]
 #      last_blog_view:time,
 #     }
 
@@ -59,6 +60,25 @@ class User(UserMixin):
         if doc is None:return None
         return User.load(format(doc['_id']))
 
+    @staticmethod
+    def addNotification(
+            name,
+            content=None,
+            type="notification",
+            link=None,
+            fromName=None):
+        if name is None or not User.exsitName(name):return 'failed'
+        db.db.users.update_one({'name':name},
+        {'$push':{'notification':{
+            'type':type,
+            'content':content,
+            'link':link,
+            'from':fromName,
+            'read':False,
+            'emitTime':datetime.datetime.utcnow()
+        }}})
+        return 'success'
+
     def login(self):
         db.db.users.update_one({'_id':self._id},{'$set':{'last_login':datetime.datetime.utcnow()}})
 
@@ -92,6 +112,7 @@ class User(UserMixin):
             'games':[],
             'notification':[],
             'blogs':[],
+            'viewedBlog':[],
             'join_date':datetime.datetime.utcnow()
         }).inserted_id)
         return 'success'

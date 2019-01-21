@@ -4,7 +4,7 @@ export default {
   title: '加入超級帆哥宇宙',
   subtitle: '飛向宇宙浩瀚無垠',
   nameLabel:'暱稱',
-  nameDescription:'向其他玩家顯示的名稱。',
+  nameDescription:'向其他玩家顯示的名稱。無法更改。',
   namePlaceholder:'輸入暱稱',
   emailLabel:'Email 信箱',
   emailPlaceholder:'輸入信箱',

@@ -80,7 +80,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import { pwd_re, email_re } from '@/rules'
+import { pwd_re, email_re, username_re } from '@/rules'
 
 
 export default {
@@ -118,7 +118,7 @@ export default {
     onSubmit(){
       let valid=true;
       this.formV.showCollapse=false;
-      if(this.form.name==''){this.formV.name=false;valid=false;}else this.formV.name=true;
+      if(this.form.name==''||!username_re.test(this.form.name)){this.formV.name=false;valid=false;}else this.formV.name=true;
       if(this.form.real_name==''){this.formV.real=false;valid=false;}else this.formV.real=true;
       if(!email_re.test(this.form.email)){this.formV.email=false;valid=false}else this.formV.email=true;
       if(this.form.password==''||!pwd_re.test(this.form.password)){this.formV.pwd=false;valid=false}else this.formV.pwd=true;

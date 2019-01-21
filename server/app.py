@@ -1,6 +1,8 @@
 from flask import Flask, Blueprint, session, jsonify
 from flask_login import LoginManager
 from flask_cors import CORS
+from flask.json import JSONEncoder
+from datetime import date
 
 import sys
 
@@ -11,6 +13,21 @@ app.config.update(
     DEBUG=True,
     SECRET_KEY=b'\x92d\xf2\xae\x03g\xb7\xa0O\xac[D\x13\x08\x1a\x94'
 )
+
+class CustomJSONEncoder(JSONEncoder):
+
+    def default(self, obj):
+        try:
+            if isinstance(obj, date):
+                return obj.isoformat()
+            iterable = iter(obj)
+        except TypeError:
+            pass
+        else:
+            return list(iterable)
+        return JSONEncoder.default(self, obj)
+
+app.json_encoder = CustomJSONEncoder
 
 # initialize database
 from models.User import db as user_db

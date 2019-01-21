@@ -1,11 +1,13 @@
 <template lang="html">
-  <div class="">
-    <h1>User Home</h1>
-  </div>
+  <b-container>
+    <h1>Welcome to {{username}}'s home'</h1>
+  </b-container>
 </template>
 
 <script>
 export default {
+  name:'UserHome',
+  props:['username']
 }
 </script>
 
