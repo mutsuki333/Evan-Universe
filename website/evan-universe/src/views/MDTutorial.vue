@@ -26,7 +26,7 @@
 <script>
 import VueMarkdown from 'vue-markdown'
 import { mapActions } from 'vuex'
-import { mention_re } from '@/rules'
+import { filterText } from '@/rules'
 
 import Etextarea from '@/components/Etextarea.vue'
 
@@ -50,16 +50,7 @@ export default {
     ]),
     Mention(){
       return (str)=>{
-        str = str.toString();
-        let mention = str.match(mention_re)
-        while (mention) {
-          let username = mention[0].trim();
-          let index = mention['index']
-          str = str.splice(index+1,0,'[')
-          str = str.splice(index+username.length+2,0,`](/user/home/${username.slice(1)})`)
-          mention = str.match(mention_re)
-        }
-        return str
+        return filterText(str)[0]
       }
     },
     test(evt){

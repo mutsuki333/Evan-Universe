@@ -9,7 +9,7 @@
       <b-collapse is-nav id="nav_collapse">
 
         <b-navbar-nav>
-          <b-nav-item to="/blogs">Blogs</b-nav-item>
+          <b-nav-item to="/blogs/home">Blogs</b-nav-item>
           <b-nav-item to="/mdtutorial">Markdown Tutorial</b-nav-item>
           <b-nav-item to="#" disabled>Games</b-nav-item>
           <b-nav-item to="/post">post(test)</b-nav-item>

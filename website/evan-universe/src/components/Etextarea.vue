@@ -45,6 +45,7 @@ export default {
     ]),
     drop(e){
       let files = e.dataTransfer.files
+      let name=e.dataTransfer.files[0].name;
       if (files.length > 0) {
         let formData = new FormData()
         for (var file of files) {
@@ -59,7 +60,7 @@ export default {
                 start = e.target.selectionStart,
                 end = e.target.selectionEnd;
             e.target.value = val.substring(0, start) +
-            `![alt](${res})\n`
+            `![${name}](${res})\n`
             + val.substring(end);
 
             e.target.selectionStart = e.target.selectionEnd = start;
@@ -70,19 +71,21 @@ export default {
     paste(e){
       let items = e.clipboardData.items
       let formData = new FormData()
+      let name = e.clipboardData.getData("text")
       for (let item of items) {
         if (item.type.match('image.*')) {
           formData.append('file', item.getAsFile())
         }
       }
       if (formData.has('file')) {
+        e.preventDefault();
         this.uploadIMG(formData)
         .then(res=>{
           let val = e.target.value,
               start = e.target.selectionStart,
               end = e.target.selectionEnd;
           e.target.value = val.substring(0, start) +
-          `![alt](${res})\n`
+          `![${name}](${res})\n`
           + val.substring(end);
 
           e.target.selectionStart = e.target.selectionEnd = start;

@@ -2,71 +2,14 @@ import axios from 'axios'
 // import Cookies from 'js-cookie'
 
 
-import { mention_re, hashtag_re , hashtag_nospace_re } from '@/rules'
+import { filterText, imgs } from '@/rules'
 
-
-function mention(str){
-  str = str.toString();
-  let mention = str.match(mention_re)
-  if(!mention)return [str];
-  let names=[];
-  while (mention) {
-    let username = mention[1];
-    let hasUser = false;
-    let index = mention['index']
-    str = str.splice(index+1,0,'[')
-    str = str.splice(index+username.length+2,0,`](/user/home/${username.slice(1)})`)
-    mention = str.match(mention_re)
-    for (let i in names) {
-      if(names[i]==username.slice(1))hasUser=true;
-    }
-    if(!hasUser)names.push(username.slice(1))
-  }
-  return [].concat([str],names)
-};
-
-function hashtag_noSpace(str){
-  str = str.toString();
-  let tags = str.match(hashtag_nospace_re)
-  if(!tags)return str;
-  let strStart = '', strEnd = str;
-  while (tags) {
-    console.log(tags);
-    let tag = tags[1];
-    let index = tags['index']
-    strEnd = strEnd.splice(index,0,'[')
-    strEnd = strEnd.splice(index+tag.length+1,0,`](/blogs/tags/${tag.slice(1)})`)
-    strStart += strEnd.slice(0,index+3);
-    strEnd = strEnd.slice(index+3);
-    tags = strEnd.match(hashtag_nospace_re)
-  }
-  return strStart+strEnd
-};
-
-function hashtag(str){
-  str = str.toString();
-  let tags = str.match(hashtag_re)
-  if(!tags)return str;
-  while (tags) {
-    let tag = tags[1];
-    let index = tags['index']
-    str = str.splice(index+1,0,'[')
-    str = str.splice(index+tag.length+2,0,`](/blogs/tags/${tag.slice(1)})`)
-    tags = str.match(hashtag_re)
-  }
-  return str
-};
-
-function filterText(str){
-  str = hashtag(str)
-  let parsed = mention(str);
-  return parsed
-};
 
 const state = {
   milestone:'',
-  blogs:{},
-  blog:{}
+  blogs:[],
+  blog:{},
+  milestone:''
 }
 
 
@@ -97,22 +40,38 @@ const actions = {
   },
   loadBlogs:({state,commit},params)=>{
     return new Promise(function(resolve, reject) {
-
+      let process = (blogs)=>{
+        if(blogs==='end')resolve('end')
+        for (let blog of blogs) {
+          blog.imgs=imgs(blog.content)
+        }
+        if(state.milestone==''){
+          commit('setBlogs',blogs)
+        }
+        else{
+          commit('appendBlogs',blogs)
+        }
+        resolve('ok')
+      }
+      if(params.isEmpty && state.milestone!='')commit('setMilestone','')
+      if(params.hasOwnProperty('Bid'))commit('setMilestone',params.milestone)
       axios('blog/view',{params: params})
       .then((res) => {
-        if(state.blogs.length<=1)
-          commit('setBlogs',res.data)
-        else
-          commit('appendBlogs',res.data)
-        resolve('ok')
+        process(res.data)
       })
       .catch((err) => {reject(err)})
+
     });
   },
   postBlog:({commit},post)=>{
+    let filtered = filterText(post.content);
+    post.content = filtered[0]
     return new Promise(function(resolve, reject) {
       axios.post('blog/post',post)
-      .then((res) => {resolve(res.data)})
+      .then((res) => {
+        for (name of filtered.slice(1))axios(`/announce/mentioned/${res.data}/${name}`)
+        resolve(res.data)
+      })
       .catch((err) => {reject(err)})
     });
   },
@@ -151,7 +110,10 @@ const mutations = {
     state.blogs=blogs
   },
   appendBlogs(state,blogs){
-    state.blogs.concat(blogs)
+    state.blogs=state.blogs.concat(blogs)
+  },
+  setMilestone(state,milestone){
+    state.milestone=milestone;
   }
 }
 

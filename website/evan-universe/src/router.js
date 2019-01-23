@@ -4,6 +4,7 @@ import Home from './views/Home.vue'
 
 // import Etextarea from './components/Etextarea.vue'
 
+
 Vue.use(Router)
 
 export default new Router({
@@ -57,8 +58,12 @@ export default new Router({
     },
     {
       path: '/blogs',
-      name: 'blogs',
-      component: () => import('./components/Blog/Blogs.vue')
+      component: () => import('./views/BlogsHome.vue'),
+      children:[
+        { path:'home',props:true,component: () => import('./components/Blog/Blogs.vue') },
+        { path: 'tags/:tag',props:true,component: () => import('./components/Blog/Blogs.vue')},
+        { path: 'keyword/:keyword', props:true, component: () => import('./components/Blog/Blogs.vue')}
+      ]
     },
     {
       path: '/blog/:Bid',

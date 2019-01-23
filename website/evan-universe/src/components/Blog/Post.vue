@@ -62,10 +62,11 @@
           <b-tab title="edit" active>
             <Etextarea id="content" v-model="blog.content" rows=15 />
           </b-tab>
-          <b-tab title="preview" @click="highlight()">
+          <b-tab title="preview" @click="showPre()">
             <vue-markdown
               class="markdown-preview"
-              :source='blog.content'
+              :source='mdpre'
+              @rendered='highlight()'
             />
           </b-tab>
         </b-tabs>
@@ -86,6 +87,7 @@ import VueMarkdown from 'vue-markdown'
 
 import Etextarea from '@/components/Etextarea.vue'
 import Chip from '@/components/SmallComponents/Chip.vue'
+import { filterText } from '@/rules'
 
 export default {
   name:'Post',
@@ -101,7 +103,8 @@ export default {
     },
     tagErr:false,titleV:null,
     tagP:'',
-    modalShow:false,next:'',shouldConfirm:true
+    modalShow:false,next:'',shouldConfirm:true,
+    mdpre:''
   }),
   computed:{
     ...mapGetters('UserCtl',[
@@ -160,7 +163,6 @@ export default {
           this.blog.tags.splice(i,1)
         }
       }
-
     },
     Valid(){
       if(this.blog.title===''){this.titleV=false;return false}
@@ -188,6 +190,9 @@ export default {
       this.addNote(this.sheet.cookiemsg);
       this.shouldConfirm=false;
       this.$router.go(-1);
+    },
+    showPre(){
+      this.mdpre=filterText(this.blog.content)[0]
     },
     test(){
       console.log(JSON.stringify(this.blog));

@@ -1,6 +1,6 @@
 <template lang="html">
-  <span class="pl-1 default" v-bind:class="{'white':white}">
-    <label class="chips">
+  <span class="pl-1 default" v-bind:class="{'white':white,'lightBlue':lightBlue}">
+    <b-btn class="chips p-0" size='sm' type="link" :disabled="!active" :href="href">
       <span class="m-2">
         <slot>{{value}}</slot>
         <span v-if="!noIcon">
@@ -10,7 +10,7 @@
           </i>
         </span>
       </span>
-    </label>
+    </b-btn>
   </span>
 </template>
 
@@ -26,6 +26,18 @@ export default {
     white:{
       type: Boolean,
       default: false
+    },
+    lightBlue:{
+      type: Boolean,
+      default: false
+    },
+    href:{
+      type:String,
+      default: null
+    },
+    active:{
+      type:Boolean,
+      default:false
     }
   },
   data:()=>({
@@ -43,6 +55,7 @@ $size: 0.7em;
   border-radius: 15px !important;
   font-size: $size;
   width: auto;
+  opacity: 1;
   font-weight: bold;
 }
 .icon{
@@ -70,6 +83,15 @@ $size: 0.7em;
   }
 }
 
+.lightBlue{
+  .chips{
+    background-color: LightSkyBlue;
+    color: black;
+  }
+  .icon{
+    color: black;
+  }
+}
 
 
 .pointer{
