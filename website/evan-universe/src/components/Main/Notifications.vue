@@ -2,8 +2,8 @@
 <div class="Notifications pr-0">
   <!-- notifications/overall alerts/important messages -->
   <b-modal v-model='Note' ok-only>
-    {{noteMsg}}
-    <!-- <vue-markdown :source='noteMsg' /> -->
+    <!-- {{noteMsg}} -->
+    <vue-markdown :source='noteMsg' />
   </b-modal>
 
   <!-- ads/events -->

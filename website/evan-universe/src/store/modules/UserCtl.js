@@ -7,7 +7,8 @@ import Cookies from 'js-cookie'
 
 const state = {
   AuthenticatedType:'unauthorized',
-  user: {}
+  user: {},
+  otherUser:{}
 }
 
 
@@ -16,7 +17,9 @@ const getters = {
   user:(state)=>{return state.user},
   AuthenticatedType:(state)=>{
     return state.AuthenticatedType;
-  }
+  },
+  otherUser:(state)=>{return state.otherUser},
+  own:(state)=>{return state.user.id==state.otherUser.id}
 }
 
 // actions
@@ -31,7 +34,7 @@ const actions = {
             return
           }
           commit('login',response.data);
-          resolve('success');
+          resolve(response.data.name);
         })
         .catch(err => console.log(err))
     })
@@ -72,6 +75,23 @@ const actions = {
       .catch(err=>console.log(err))
     })
   },
+  getUser:({state,commit},username)=>{
+    return new Promise(function(resolve, reject) {
+      if(state.otherUser.username===username){
+        resolve('ok')
+      }
+      else{
+        axios(`/auth/user/${username}`)
+        .then(res=>{
+          if(res.data.name==undefined)reject(`unknown username ${username}`)
+          else{
+            commit('set_otherUser',res.data)
+            resolve('ok')
+          }
+        })
+      }
+    });
+  },
   sayhi:()=>alert('hi')
 }
 
@@ -88,6 +108,9 @@ const mutations = {
   set_user(state,user){
     state.AuthenticatedType=user.auth_type;
     state.user=user;
+  },
+  set_otherUser(state,user){
+    state.otherUser=user
   }
 }
 

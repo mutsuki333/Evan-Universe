@@ -1,12 +1,16 @@
 # User data structure:
 #     in users:
 #     { name real_name password_hash email auth_type ...  //user infos
-#       join_date last_login pic
+#       join_date last_login pic description
 #      notification:[#see announce, ...]
 #      games[{name:'xxx',id:'xxx',link:'' }, ...]
 #      blogs[ id:'xxx' ],
 #      viewedBlog:[{Bid,time}...]
 #      last_blog_view:time,
+#      home: { template:".../custom",
+#        (if custom)content: "...(md)"",
+#     (else) props...
+#        }
 #     }
 
 
@@ -16,7 +20,14 @@ from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
 
-db = PyMongo();
+db = PyMongo()
+
+danger_fields=[
+'_id','name','join_date','email','auth_type', # should remain unchanged
+'blogs','games','viewedBlog','home',          # should only be changed under caution
+'id'                                          # program tmp fields
+]
+
 
 class User(UserMixin):
     # is_active = True
@@ -53,6 +64,17 @@ class User(UserMixin):
         )
         user.id=format(doc['_id'])
         return user
+
+    @staticmethod
+    def getByName(name):
+        fields={
+        'name':1,'auth_type':1,'description':1,'games':1,'home':1,'last_login':1,'pic':1
+        }
+        doc = db.db.users.find_one({'name':name},fields)
+        if doc is None:return {}
+        doc['id']=format(doc['_id'])
+        doc.pop('_id')
+        return doc
 
     @staticmethod
     def filter(email):
@@ -119,7 +141,14 @@ class User(UserMixin):
 
     def update_profile(self,dict):
         if dict is not None:
-            if dict.get('_id'):dict.pop('_id')
+            should_remove=[]
+            for value in dict:
+                for field in danger_fields:
+                    if value == field:
+                        should_remove.append(value)
+            for field in should_remove:
+                dict.pop(field)
+            print(dict)
             if len(dict)<1:return'failed'
             db.db.users.update_one({'_id':self._id},{'$set':dict})
             return 'success'

@@ -1,5 +1,5 @@
 <template lang="html">
-  <b-container class="MDTutorial pt-5">
+  <b-container class="MDTutorial pt-5 px-0">
     <b-btn v-b-toggle.toc class="m-1 mb-3">Table of contents</b-btn>
     <b-collapse id="toc" class="mt-2">
     </b-collapse>

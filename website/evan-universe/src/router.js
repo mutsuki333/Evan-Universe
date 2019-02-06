@@ -39,11 +39,17 @@ export default new Router({
       ]
     },
     {
-      path: '/user/',
-      component: () => import('./views/UserPage.vue'),
+      path: '/user/:username',
+      component: () => import('./views/UserView.vue'),
+      props: true,
       children:[
-        { path: 'home/', component: ()=>import('./components/User/UserProfile')},
-        { path: 'home/:username', props: true, component: ()=>import('./components/User/UserHome')}
+        { path: 'home',alias:'', component: ()=>import('./components/User/UserHome.vue')},
+        { path: 'profile', component: ()=>import('./components/User/UserProfile.vue')},
+        { path: 'blogs/:test',props:true, component: ()=>import('./components/User/UserBlogs.vue')},
+        { path: 'blogs', component: ()=>import('./components/User/UserBlogs.vue')},
+        { path: 'games', component: ()=>import('./components/User/UserGames.vue')},
+        { path: 'trophy', component: ()=>import('./components/User/UserTrophy.vue')},
+        { path: 'settings', component: ()=>import('./components/User/UserSetting.vue')},
       ]
     },
     {
@@ -80,6 +86,11 @@ export default new Router({
       path: '/post',
       name: 'post',
       component: () => import('./components/Blog/Post.vue')
+    },
+    {
+      path: '/games',
+      name: 'games',
+      component: () => import('./views/GamesHome.vue')
     },
     {
       path: '/test',

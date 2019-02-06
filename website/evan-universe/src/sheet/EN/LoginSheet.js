@@ -9,5 +9,7 @@ export default{
   remember:'remember me',
   register:'Register',
   forget:'Forget password?',
-  noUser: 'Invalid username or password'
+  forgotten:'Plz contact the Administrator',
+  noUser: 'Invalid username or password',
+  welcome:'Welcome back',
 }

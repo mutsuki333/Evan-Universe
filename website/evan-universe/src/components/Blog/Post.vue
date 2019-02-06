@@ -1,5 +1,5 @@
 <template lang="html">
-  <b-container fluid class="pt-3 w-100 pb-5">
+  <b-container fluid class="pt-3 px-0 w-100 pb-5">
     <b-modal v-model="modalShow">
       {{sheet.leave}}
       <div slot="modal-footer" class="w-100">

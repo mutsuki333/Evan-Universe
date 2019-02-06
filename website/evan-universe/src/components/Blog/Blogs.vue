@@ -1,10 +1,32 @@
 <template lang="html">
-  <b-container class="Blogs pb-5" fluid>
+  <b-container class="Blogs pb-5 px-0 px-sm-1" fluid v-show="!refresh">
+    <b-navbar
+      class="rounded blogsSearch mx-auto mt-1 py-0"
+      type="dark" variant="info" >
+      <b-navbar-brand href="#">Blogs</b-navbar-brand>
+        <!-- Right aligned nav items -->
+        <b-navbar-nav class="mr-auto">
+          <b-nav-form>
+            <b-form-input size="sm" class="mr-sm-2" type="text" placeholder="Search"/>
+            <b-dropdown size="sm" split :text="selected" class="m-2">
+              <b-dropdown-item-button
+                  v-for="t in type"
+                  @click="selected=t">{{t}}</b-dropdown-item-button>
+            </b-dropdown>
+            <b-button size="sm" class="my-2 my-sm-0" type="button">Search</b-button>
+          </b-nav-form>
+        </b-navbar-nav>
+        <b-navbar-nav>
+          <b-nav-item to="/post">{{sheet.post}}</b-nav-item>
+        </b-navbar-nav>
+
+      </b-navbar>
+
     <b-card
       :title="blog.subtitle"
       bg-variant="secondary"
       text-variant="white"
-      class="my-3 cards"
+      class="my-3"
       v-for="blog in blogs"
       footer-class="blogs-footer border-0 bg-secondary"
       header-class="pb-0">
@@ -15,7 +37,7 @@
             <div class="d-flex flex-column user-info mb-3">
               <b-btn
                   class="nametag py-0 p-0 border-0"
-                  :to="'/user/home/'+blog.username">{{blog.username}}</b-btn>
+                  :to="'/user/'+blog.username">{{blog.username}}</b-btn>
               <b-img-lazy
                   rounded="circle"
                   width="75px" height="75px"
@@ -25,7 +47,7 @@
             <div class="d-flex align-items-end">
               <div class="d-flex flex-column">
                 <div class="d-flex justify-content-end">
-                  <chip :href='`/blogs/tags/${tag}`' active
+                  <chip :to='`/blogs/tags/${tag}`' active
                         noIcon lightBlue
                         v-for="tag in blog.tags" :value='tag' />
                 </div>
@@ -41,14 +63,16 @@
               <div class="d-flex flex-column user-info mb-3">
                 <b-btn
                     class="nametag py-0 p-0 border-0"
-                    :to="'/user/home/'+blog.username">{{blog.username}}</b-btn>
+                    :to="'/user/'+blog.username">{{blog.username}}</b-btn>
                 <b-img-lazy
                     rounded="circle"
                     width="75px" height="75px"
                     :src="blog.pic"/>
               </div>
               <div class="pl-2 pt-3">
-                <chip :href='`/blogs/tags/${tag}`' active noIcon lightBlue v-for="tag in blog.tags" :value='tag' />
+                <chip :to='`/blogs/tags/${tag}`'
+                    active noIcon lightBlue
+                    v-for="tag in blog.tags" :value='tag' />
               </div>
             </div>
             <h1>{{blog.title}}</h1>
@@ -58,16 +82,16 @@
 
       </div>
 
-      <b-container class="bg-light text-dark" :to="`/blog/${blog.id}`">
+      <b-container class="rounded bg-light text-dark" :to="`/blog/${blog.id}`">
         <vue-markdown
             class="preview limit"
-        >{{blogContentFilter(blog.content)}}</vue-markdown>
+        >{{blog.content}}</vue-markdown>
         <div class="d-flex justify-content-end">
           <b-btn
                  size="sm"
                  variant="link"
                  :to="`/blog/${blog.id}`">
-                 More
+                 {{sheet.more}}
           </b-btn>
         </div>
 
@@ -110,10 +134,12 @@
       </div> -->
 
     </b-card>
+
     <div class="loader mx-auto mt-4" v-if="load"></div>
-    <div v-if="noResult" class="d-flex justify-content-center">
-      <h1>no result</h1>
+    <div v-if="noResult" class="pt-5 d-flex justify-content-center">
+      <h1>{{sheet.noResult}}</h1>
     </div>
+    <p v-if="end" class="d-flex justify-content-center">End</p>
   </b-container>
 </template>
 
@@ -129,10 +155,20 @@ import { imgs, blogContentFilter } from '@/rules'
 import axios from 'axios'
 
 export default {
-  name:'Blog',
+  name:'Blogs',
   components:{
     VueMarkdown,
     Chip
+  },
+  watch: {
+    $route: {
+       handler() {
+         this.end=false;
+         this.refresh=true;
+         this.load_blogs();
+         setTimeout(()=>this.refresh=false,200)
+       },
+    }
   },
   props: {
     tag:{
@@ -144,10 +180,13 @@ export default {
   },
   data:()=>({
     sheet:{},
-    extend:{},
+    type:[],
+    selected:'',
     params:{isEmpty:true},
     load:true,
     noResult:false,
+    refresh:false,
+    end:false
   }),
   computed:{
     ...mapGetters('System',[
@@ -160,7 +199,8 @@ export default {
   methods:{
     ...mapActions('System',[
       'loadsheet',
-      'highlight'
+      'highlight',
+      'scrollToTop'
     ]),
     ...mapActions('BlogCtl',[
       'loadBlogs',
@@ -173,44 +213,56 @@ export default {
         if(blog.imgs==undefined)return false;
         if(blog.imgs.length==0)return false;
         return true;
+    },
+    load_blogs(){
+      this.params={isEmpty:true}
+      this.load=true;
+      if(this.tag){this.params.tag=this.tag;this.params.isEmpty=false;}
+      if(this.keyword){this.params.keyword=this.keyword;this.params.isEmpty=false;}
+      this.loadBlogs(
+        this.params
+      ).then(()=>{
+        if(this.blogs.length==0)
+          setTimeout(()=>{
+            this.load=false;
+            if(this.blogs.length==0)this.noResult=true;
+          },1000)
+        else this.load=false;
+      })
     }
-
-
   },
   created(){
     let that = this;
     window.onscroll = function(ev) {
       if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight) {
-        console.log('end');
-        that.params.Bid=that.blogs[that.blogs.length-1].id;
+        if(that.end)return
+        that.load=true;
+        that.params.timeStmp=that.blogs[that.blogs.length-1].last_update;
         that.params.isEmpty=false;
         that.loadBlogs(that.params).then((res)=>{
-          that.load=false
+          if(res=='end')that.end=true;
+          that.load=false;
         })
       }
     };
   },
   beforeMount:function(){
-    if(this.tag){this.params.tag=this.tag;this.params.isEmpty=false;}
-    if(this.keyword){this.params.keyword=this.keyword;this.params.isEmpty=false;}
     this.loadsheet(this.$options.name)
-    .then(sheet=>this.sheet=sheet)
-    this.loadBlogs(
-      this.params
-    ).then(()=>{
-      if(this.blogs.length==0)
-        setTimeout(()=>{
-          this.load=false;
-          if(this.blogs.length==0)this.noResult=true;
-        },1000)
-      else this.load=false;
-
-
+    .then(sheet=>{
+      this.sheet=sheet;
+      for (let t in sheet.types) {
+        this.type.push(sheet.types[t])
+      }
+      this.selected=this.type[1]
     })
+    this.load_blogs()
   },
   updated:function(){
     this.highlight();
-  }
+  },
+  // beforeRouteLeave (to, from, next) {
+  //   console.log('leave');
+  // }
 }
 
 </script>
@@ -221,13 +273,9 @@ export default {
   max-width: 60rem;
 }
 
-.cards{
-  // max-height: 20rem;
-}
-
 .preview{
   img{
-    max-width: 15rem;
+    max-width: 100%;
     height: auto;
   }
 }

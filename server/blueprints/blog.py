@@ -71,9 +71,12 @@ def view():
     if current_user.is_authenticated:
         current_user.viewBlog()
     return jsonify(Blogs.View(
-        # timeStmp=request.args.get('timepstmp'),
+        timeStmp=request.args.get('timeStmp'),
         tag=request.args.get('tag'),
-        Bid=request.args.get('Bid')
+        username=request.args.get('username'),
+        keyword=request.args.get('keyword'),
+        title=request.args.get('title'),
+        # field=request.args.get('field')
     ))
 
 @blog.route('/id/<Bid>')

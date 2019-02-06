@@ -53,8 +53,9 @@ const actions = {
         }
         resolve('ok')
       }
-      if(params.isEmpty && state.milestone!='')commit('setMilestone','')
-      if(params.hasOwnProperty('Bid'))commit('setMilestone',params.milestone)
+
+      if(params.hasOwnProperty('timeStmp'))commit('setMilestone',params.timeStmp)
+      else commit('setMilestone','');
       axios('blog/view',{params: params})
       .then((res) => {
         process(res.data)

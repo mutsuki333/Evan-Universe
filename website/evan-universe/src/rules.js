@@ -10,6 +10,7 @@ export const iframe_re = /<\s*iframe[^>]*>(.*?)<\s*\/\s*iframe>/
 export const div_re = /<div\b[^>]*>([^]*?)<\/div>/
 export const codeBlock_re = /`{3}[^`]+`{3}/
 export const htmlTag_re = /<[^>]*>/
+// export const 
 
 export function imgs(str){
   let img = str.match(img_re);
@@ -33,7 +34,7 @@ export function mention(str){
     let hasUser = false;
     let index = mention['index']
     str = str.splice(index+1,0,'[')
-    str = str.splice(index+username.length+2,0,`](/user/home/${username.slice(1)})`)
+    str = str.splice(index+username.length+2,0,`](/user/${username.slice(1)})`)
     mention = str.match(mention_re)
     for (let i in names) {
       if(names[i]==username.slice(1))hasUser=true;

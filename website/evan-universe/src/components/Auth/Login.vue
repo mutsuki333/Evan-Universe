@@ -35,7 +35,10 @@
       </b-form-group>
       <b-button type="button" variant="primary" @click="onSubmit">{{sheet.submit}}</b-button>
       <router-link class="float-right" to="/auth/register">{{sheet.register}}</router-link><br>
-      <b-button v-show="formV.forget" class="float-right btn-sm" type="button" variant="secondary" href='#'>{{sheet.forget}}</b-button>
+      <b-button v-show="formV.forget"
+                class="float-right btn-sm"
+                type="button" variant="secondary"
+                @click="addNote(sheet.forgotten)">{{sheet.forget}}</b-button>
     </b-form>
   </b-card>
   </div>
@@ -92,7 +95,8 @@ export default {
       'login'
     ]),
     ...mapActions('System',[
-      'loadsheet'
+      'loadsheet',
+      'addNote'
     ]),
     onSubmit(){
       let valid=true;
@@ -110,7 +114,11 @@ export default {
         else {
           if(this.form.checked)RememberLogin(true,this.form.email,this.form.password)
           else RememberLogin(false)
-          this.$router.push(this.routeBack)
+          this.addNote(`${this.sheet.welcome} ${res}`)
+          if (this.routeBack.length<4) {
+            this.$router.push('/home')
+          }
+          else this.$router.push(this.routeBack)
           // this.$router.go(-1)
         }
       })

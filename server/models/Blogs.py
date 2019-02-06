@@ -53,21 +53,30 @@ db = PyMongo()
 class Blogs():
 
     @staticmethod
-    def View(Bid=None,tag=None,search=None,limit=5):
-        if Bid is None:
-            timeStmp=datetime.datetime.utcnow()
-            dummy_id=ObjectId.from_datetime(timeStmp)
-            query = {'_id':{'$lte':dummy_id},'state':'ok'}
+    def View(timeStmp=None,tag=None,search=None,username=None,
+            keyword=None,title=None,field=None,
+            multiAnd=False,multiOr=False,limit=5):
+        print(timeStmp)
+        if username is None:
+            if timeStmp is None:
+                timeStmp=datetime.datetime.utcnow()
+                query = {'last_update':{'$lte':timeStmp},'state':'ok'}
+            else:
+                query = {'last_update':{'$lt':parse_datetime(timeStmp)},'state':'ok'}
         else:
-            query = {'_id':{'$lt':ObjectId(Bid)},'state':'ok'}
-        print(tag)
+            if timeStmp is None:
+                timeStmp=datetime.datetime.utcnow()
+                query = {'last_update':{'$lte':timeStmp},'state':'ok','username':username}
+            else:
+                query = {'last_update':{'$lt':parse_datetime(timeStmp)},'state':'ok','username':username}
         if tag is not None:
             query['tags']=tag
-        field = {'title':1,'tags':1,'post':1,'subtitle':1,'likes':1,
-                 'liked':1,'dis':1,'disd':1,'last_update':1,'content':1,
-                 'commentCtr':1,'viewed':1,'Uid':1,'username':1}
+        if field is None or field.password_hash is not None:
+            field = {'title':1,'tags':1,'post':1,'subtitle':1,'likes':1,
+                     'liked':1,'dis':1,'disd':1,'last_update':1,'content':1,
+                     'commentCtr':1,'viewed':1,'Uid':1,'username':1}
         blogs = []
-        for doc in db.db.blogs.find(query,field).limit(limit).sort('_id',-1):
+        for doc in db.db.blogs.find(query,field).limit(limit).sort('last_update',-1):
             doc['id']=format(doc['_id'])
             doc['pic']=db.db.users.find_one({'_id':ObjectId(doc.get('Uid'))},{'pic':1}).get('pic')
             doc.pop('_id')

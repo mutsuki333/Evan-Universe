@@ -69,7 +69,12 @@ def login():
         return jsonify(user.user_obj())
     return 'login require'
 
-@auth.route('auth_type')
+@auth.route('/auth_type')
 def auth_type():
     # print('current user: {}'.format(current_user))
     return jsonify({'auth_type' :current_user.is_authenticated and current_user.auth_type or 'unauthorized'})
+
+
+@auth.route('user/<username>')
+def getUser(username):
+    return jsonify(User.getByName(username))

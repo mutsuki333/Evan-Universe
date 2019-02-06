@@ -9,5 +9,7 @@ export default{
   remember:'記住我',
   register:'註冊',
   forget:'忘記密碼？',
-  noUser: '帳號或密碼錯誤'
+  forgotten:'請聯繫網站管理員',
+  noUser: '帳號或密碼錯誤',
+  welcome:'歡迎回來'
 }

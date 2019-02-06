@@ -1,6 +1,6 @@
 <template lang="html">
   <span class="pl-1 default" v-bind:class="{'white':white,'lightBlue':lightBlue}">
-    <b-btn class="chips p-0" size='sm' type="link" :disabled="!active" :href="href">
+    <b-btn class="chips p-0" size='sm' type="link" :disabled="!active" :href="href" :to="to">
       <span class="m-2">
         <slot>{{value}}</slot>
         <span v-if="!noIcon">
@@ -32,6 +32,10 @@ export default {
       default: false
     },
     href:{
+      type:String,
+      default: null
+    },
+    to:{
       type:String,
       default: null
     },

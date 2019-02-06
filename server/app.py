@@ -6,7 +6,7 @@ from datetime import date
 
 import sys
 
-LOGINVIEW='http://localhost:8080/auth/login'
+LOGINVIEW='http://54.71.220.94/Evan-Universe/auth/login'
 
 app = Flask(__name__)
 app.config.update(

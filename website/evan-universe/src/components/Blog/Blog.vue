@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="Blog">
     <div v-if="loading" class="loader"></div>
-    <b-container v-else class="blog pb-5" fluid>
+    <b-container v-else class="blog pb-5 px-0 px-sm-1" fluid>
       <b-card
         :title="blog.username"
         bg-variant="secondary"
@@ -9,7 +9,7 @@
         <b-row>
           <b-col sm="2" class="d-none d-sm-block">
             <b-card-img :src="blog.pic"alt="Image" />
-            <b-link :to="'/user/home/'+blog.username" class="text-light mx-auto">{{sheet.profile}}</b-link>
+            <b-link :to="'/user/'+blog.username" class="text-light mx-auto">{{sheet.profile}}</b-link>
           </b-col>
           <b-col>
             <b-card :sub-title="blog.subtitle"
@@ -19,7 +19,7 @@
                       <b-row>
                         <b-col class="d-block d-sm-none">
                           <b-card-img :src="blog.pic"alt="Image" />
-                          <b-link :to="'/user/home/'+blog.username" class="text-black">{{sheet.profile}}</b-link>
+                          <b-link :to="'/user/'+blog.username" class="text-black">{{sheet.profile}}</b-link>
                         </b-col>
                         <b-col>
                           <span class="text-capitalize">{{blog.title}}</span>
@@ -28,7 +28,7 @@
                       </b-row>
                       <div class="float-right">
                         <span v-for="tag in blog.tags">
-                          <chip :href='`/blogs/tags/${tag}`' active noIcon :value='tag' />
+                          <chip :to='`/blogs/tags/${tag}`' active noIcon :value='tag' />
                         </span>
                       </div>
                     </div>
@@ -52,7 +52,7 @@
                 no-body
                 overlay>
                 <div slot="header">
-                  <b-link :to="'/user/home/'+comment.username"
+                  <b-link :to="'/user/'+comment.username"
                       style="white-space: nowrap;"
                       class="border border-primary rounded-pill ml-0 px-2">
                       {{comment.username}}
@@ -62,7 +62,7 @@
             </b-col>
             <b-col class="pl-sm-0" sm="10">
               <b-container class="bg-light text-dark rounded">
-                <b-link :to="'/user/home/'+comment.username"
+                <b-link :to="'/user/'+comment.username"
                     class="d-block d-sm-none border border-primary rounded-pill ml-0 px-2">
                     {{comment.username}}
                 </b-link>
@@ -82,7 +82,7 @@
                     <b-container class="bg-gray text-dark rounded pl-1">
                       <div>
                         <span>
-                          <b-link :to="'/user/home/'+reply.username"
+                          <b-link :to="'/user/'+reply.username"
                               class="border border-primary rounded-pill px-2">
                               {{reply.username}}
                           </b-link>
@@ -140,8 +140,6 @@ import { mapGetters, mapActions } from 'vuex'
 import Chip from '@/components/SmallComponents/Chip.vue'
 import Etextarea from '@/components/Etextarea.vue'
 
-//test
-import axios from 'axios'
 
 export default {
   name:'Blog',
@@ -159,22 +157,19 @@ export default {
     loading:true
   }),
   computed:{
-    ...mapGetters('UserCtl',[
-      'AuthenticatedType',
-      'user'
-    ]),
-    ...mapGetters('System',[
-
-    ]),
     ...mapGetters('BlogCtl',[
       'blog'
     ]),
   },
   methods:{
+    ...mapActions('UserCtl',[
+      'reload'
+    ]),
     ...mapActions('System',[
       'loadsheet',
       'addNote',
-      'highlight'
+      'highlight',
+      'setRouteBack'
     ]),
     ...mapActions('BlogCtl',[
       'loadBlog',
@@ -182,26 +177,45 @@ export default {
       'AddReply'
     ]),
     sendComment(){
-      if(this.comment==''){
-        this.addNote(this.sheet.commentErr)
-      }
-      else{
-        this.AddComment({'Bid':this.Bid,'content':this.comment})
-        .then(() => this.comment='').catch(err=>console.log(err))
-      }
+      this.reload()
+      .then((res) => {
+        if(res==='unauthorized'){
+          this.setRouteBack(this.$route.path);
+          this.$router.push('/auth/login')
+        }
+        else{
+          if(this.comment==''){
+            this.addNote(this.sheet.commentErr)
+          }
+          else{
+            this.AddComment({'Bid':this.Bid,'content':this.comment})
+            .then(() => this.comment='').catch(err=>console.log(err))
+          }
+        }
+      })
+
     },
     sendReply(index){
-      if(this.repInput[index]==''){
-        this.addNote(this.sheet.replyErr)
-      }
-      else{
-        this.AddReply({'Bid':this.Bid,'content':this.repInput[index],'IdDate':index})
-        .then(() => {
-          this.repInput[index]=''
-          this.repShow[index]=false;
-        })
-        .catch(err=>console.log(err))
-      }
+      this.reload()
+      .then((res) => {
+        if(res==='unauthorized'){
+          this.setRouteBack(this.$route.path);
+          this.$router.push('/auth/login')
+        }
+        else{
+          if(this.repInput[index]==''){
+            this.addNote(this.sheet.replyErr)
+          }
+          else{
+            this.AddReply({'Bid':this.Bid,'content':this.repInput[index],'IdDate':index})
+            .then(() => {
+              this.repInput[index]=''
+              this.repShow[index]=false;
+            })
+            .catch(err=>console.log(err))
+          }
+        }
+      })
     },
     repOut(index){
       if(this.repInput[index].length<1)
